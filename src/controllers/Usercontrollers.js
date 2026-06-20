@@ -139,6 +139,113 @@ const getUserById = (req, res) => {
     data: foundUser,
   });
 };
+
+
+// login 
+
+const loginUser =(req , res)=>{
+
+    res.status(200).json({
+        success: true,
+        message: "User login successful"
+    })
+}
+
+
+const logoutUser = (req , res)=>{
+    res.status(200).json({
+        success: true,
+        message: "User logout successful"
+    });
+
+}
+
+
+const changePassword = (req, res)=>{
+    const {oldPassword , newPassword} = req.body;
+
+    if(!oldPassword || !newPassword ){
+        return res.status(400).json({
+            success: false,
+            message: "Old and new password are required"
+        });
+    };
+    res.status(200).json({
+        success: true,
+        message:"Password changed successfully",
+        data: {"old Password": oldPassword , "new Password": newPassword}
+    });
+}
+
+// Update Profile
+
+const updateProfile = (req, res)=>{
+    const {name , email , phone , password} = req.body;
+
+    if(!name || !email || !phone || !password){
+        return res.status(400).json({
+            success: false,
+            message :  "At least one field is required to update"
+        });
+    };
+    res.status(200).json({
+        success: true,
+        message: "User profile updated successfully",
+        date:{
+            "name": name,
+            "email": email,
+            "phone": phone ,
+            "password": password
+        }
+    });
+}
+
+
+const makeAdmin = (req, res)=>{
+    const {id} = req.params;
+     if (!id) {
+    return res.status(400).json({success: false , message: "User id is required" });
+  }
+  res.status(200).json({
+    success:true,
+    message: "User made admin successfully"
+  });
+};
+
+
+
+const removeAd = (req, res)=>{
+    const {id} = req.params;
+     if (!id) {
+    return res.status(400).json({success: false , message: "User id is required" });
+  }
+  res.status(200).json({
+    success:true,
+    message: "Admin role removed successfully"
+  });
+};
+
+
+
+const searchUsers = (req, res) => {
+  const { name, email } = req.query;   // query string থেকে আসে, req.params না!
+
+  if (!name && !email) {
+    return res.status(400).json({
+      success: false,
+      message: "At least one search parameter (name or email) is required"
+    });
+  }
+
+
+  return res.status(200).json({
+    success: true,
+    message: "User search completed successfully",
+    data: req.query
+  });
+};
+
+
 module.exports ={
 
 
@@ -147,5 +254,12 @@ module.exports ={
     updateUser,
     deleteUser,
     getAllUsers,
-    getUserById
+    getUserById,
+    loginUser,
+    logoutUser,
+    changePassword,
+    updateProfile,
+    makeAdmin,
+    removeAd,
+    searchUsers
 }
