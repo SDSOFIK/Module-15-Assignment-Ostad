@@ -16,7 +16,12 @@ router.put("/change-password", userController.changePassword);
 router.put("/update-profile", userController.updateProfile);
 router.put("/make-admin/:id", userController.makeAdmin);
 router.put("/remove-admin/:id", userController.removeAd);
-router.get("/search", userController.searchUsers)
-
+router.get("/search", userController.searchUsers);
+router.get("/filter", userController.filterUsers);
+router.patch("/block-user/:id", userController.blockUser);
+router.patch("/unblock-user/:id", userController.unblockUser);
+router.post("/resend-verification", userController.resendVerification);
+router.post("/upload-profile-picture", middleware.upload.single("profilePicture"), userController.uploadProfilePicture);
+router.delete("/delete-account",userController.deleteAccount);
 
 module.exports = router

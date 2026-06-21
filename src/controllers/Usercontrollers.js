@@ -27,7 +27,7 @@ let user = [{
 
 let userID = 5;
 
-// user Create 
+// Create Route
 
 const createUser = (req , res)=>{
     const {name , email, age} = req.body;
@@ -52,7 +52,7 @@ const createUser = (req , res)=>{
     });
 };
 
-// user read 
+// Read Route
 const readUser =(req , res)=>{
     res.status(200).json({
         success : true,
@@ -61,7 +61,7 @@ const readUser =(req , res)=>{
     })
 }
 
-// user edit
+// Update Route
 
 const updateUser = (req , res)=>{
     const id = parseInt(req.params.id);
@@ -86,7 +86,7 @@ res.status(200).json({
 });
 };
 
-// date delete 
+// Delete Route
 
 const deleteUser = (req, res)=>{
     const id = parseInt(req.params.id);
@@ -108,7 +108,7 @@ const deleteUser = (req, res)=>{
 };
 
 
-// get all 
+// Get All Users
 
 const getAllUsers = (req, res)=>{
     res.status(200).json({
@@ -118,7 +118,7 @@ const getAllUsers = (req, res)=>{
     })
 };
 
-// id qurey 
+// Get User by ID
 
 const getUserById = (req, res) => {
 
@@ -141,7 +141,7 @@ const getUserById = (req, res) => {
 };
 
 
-// login 
+// User Login
 
 const loginUser =(req , res)=>{
 
@@ -151,6 +151,7 @@ const loginUser =(req , res)=>{
     })
 }
 
+// User Logout
 
 const logoutUser = (req , res)=>{
     res.status(200).json({
@@ -159,6 +160,7 @@ const logoutUser = (req , res)=>{
     });
 
 }
+// Change Password
 
 
 const changePassword = (req, res)=>{
@@ -200,6 +202,7 @@ const updateProfile = (req, res)=>{
     });
 }
 
+// Make Admin
 
 const makeAdmin = (req, res)=>{
     const {id} = req.params;
@@ -212,6 +215,7 @@ const makeAdmin = (req, res)=>{
   });
 };
 
+// Remove Admin
 
 
 const removeAd = (req, res)=>{
@@ -225,6 +229,7 @@ const removeAd = (req, res)=>{
   });
 };
 
+// Search Users
 
 
 const searchUsers = (req, res) => {
@@ -246,8 +251,141 @@ const searchUsers = (req, res) => {
 };
 
 
-module.exports ={
 
+
+// Filter Users
+const filterUsers = (req , res)=>{
+    const {role , status} = req.query;
+
+    if (!role || !status){
+        return res.status(400).json({
+            success: false,
+            message: "parameter role and status need at"
+        });
+    };
+
+    //example data 
+    let userRole = [
+        { id: "1", name: "Rafiul Islam", role: "admin", status: "active" },
+    { id: "2", name: "sofik", role: "super Admin", status: "active" },
+    { id: "3", name: "Karim Ahmed", role: "user", status: "active" }
+    ]
+
+    let filterResult = userRole.filter((u)=>u.role === role && u.status === status )
+    res.status(200).json({
+        success: true,
+        message:"User filter completed successfully",
+        data: filterResult
+    })
+    // please serch  (http://localhost:5000/filter?role=admin&&status=active)
+}
+
+
+// Block User
+
+
+const blockUser = (req, res) => {
+  const { id } = req.params;
+
+  if (!id) {
+    return res.status(400).json({ 
+        success: false, message: "User id is required" });
+  };
+  return res.status(200).json({
+    success: true,
+    message: "User blocked successfully"
+  });
+};
+const unblockUser = (req, res) => {
+  const { id } = req.params;
+
+  if (!id) {
+    return res.status(400).json({ 
+        success: false, message: "User id is required" });
+  };
+  return res.status(200).json({
+    success: true,
+    message: "User unblocked successfully"
+  });
+};
+// Verify Email
+
+
+const verifyEmail = (req , res)=>{
+    const {email , OTP} = req.body;
+
+    if(!email.includes("@")){
+   return res.status(400).json({ message: "Invalid email format" });}
+
+   if(!email || !OTP){
+    return res.status(400).json({
+        success: false,
+        message: "email and OTP are required"
+    });
+   };
+
+   res.status(200).json({
+    success: true,
+    message: "Email verified successfully"
+   });
+
+}
+// Resend Verification
+
+const resendVerification = (req , res)=>{
+
+    const {email} = req.body;
+
+    if(!email.includes("@")){
+        return res.status(400).json({
+            success: false,
+            message: "pleas Invalid email format"
+        });
+    };
+    if(!email){
+         return res.status(400).json({
+            success: false,
+            message: "pleas enter your mail "
+        });
+    };
+    res.status(200).json({
+        success:true,
+        message: "Verification email resent"
+    });
+}
+
+// Upload Profile Picture
+
+
+const uploadProfilePicture = (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({
+      success: false,
+      message: "No file uploaded"
+    });
+  }
+
+  return res.status(200).json({
+    success: true,
+    message: "Profile picture uploaded successfully",
+    data: {
+      filename: req.file.filename,
+      path: req.file.path
+    }
+  });
+};
+// Delete Account
+
+
+const deleteAccount  = (req, res)=>{
+
+  res.status(200).json({
+    success: true,
+    message: "Account deleted successfully",
+  });
+};
+
+module.exports ={
 
     createUser,
     readUser,
@@ -261,5 +399,12 @@ module.exports ={
     updateProfile,
     makeAdmin,
     removeAd,
-    searchUsers
+    searchUsers,
+    filterUsers,
+    blockUser,
+    unblockUser,
+    verifyEmail,
+    resendVerification,
+    uploadProfilePicture,
+    deleteAccount
 }
